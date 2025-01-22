@@ -9,6 +9,7 @@
     (print-ln "apple")
     (print-ln "banana")
     (print-ln "pomegranate")
+    (print-ln "grape")
 
 )
 (main)
