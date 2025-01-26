@@ -1,0 +1,10 @@
+(defun quicksort (lst)
+  (if (or (null lst) (null (cdr lst)))
+      lst
+      (let* ((pivot (car lst))
+             (rest (cdr lst))
+             (smaller (remove-if-not (lambda (x) (<= x pivot)) rest))
+             (larger (remove-if-not (lambda (x) (> x pivot)) rest)))
+        (append (quicksort smaller)
+                (list pivot)
+                (quicksort larger)))))
