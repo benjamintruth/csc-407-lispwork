@@ -1,10 +1,11 @@
 ;; CSC 407-001
 ;; Program Assignment 1: Common Lisp 
-;; insertion sory
+;; heap sort :(
 ;; Created By: Rien Sanning
 
 
 ;; I left in the bells and whistles
+;; will only publish the actual HeapSort, Heapify and Swap functions to the report
 
 
 
@@ -13,15 +14,6 @@
  defun print-ln (item)
   (format t "~a~%" item)
 )
-
-;; simple print list
-(
- defun print-list (list)
-  "Prints the elements of a list."
-  (dolist (element list)
-    (print-ln element))
-)
-
 
 ;; generate a random list of integers between 0 - 100 of n items
 (defun GenRandoListOfCertainLength (n) 
@@ -49,63 +41,61 @@
     (setf (nth index2 inList) temp)))    ; copy the temp of the original index 1 into index 2
 
 
-;; insertion sort
-(defun InsertionSort (INPUT_LIST)
+;;; the hated heapify function
+(defun heapify (list n i)
 
-  ;; using let again to store a return list
-  (let
-      ;; define the return value here as a copy of input
-      (
-       (SORTED_LIST (copy-list INPUT_LIST))
-      )
+  ;; this little manuver cost me 51 years ( took me forever to realize I needed sequential binding on the let* )
 
-    ;; loop through the input list
-    (do 
-        ;; on loop increment - (init) (per-loop-case)
-        ((i 0 (+ i 1))) 
-        ;; end case & return - (end-case) (return value)         
-        ((= i (length INPUT_LIST)) SORTED_LIST) 
-        ;; loop body             
-        (let (
-               (j (- i 1) )                 ;; j is the cursor we will use to pass backwards through the array and move things forwards
-               (key (nth i SORTED_LIST))    ;; key is the current item we are moving into position
-             )
-          (loop
-             while 
-                (and
-                    (>= j 0)
-                    (> (nth j SORTED_LIST) key) ;; move the current item (key) to the left until it's larger than the item to it's left
-                )
-             do
-                ;; swap items to the left
-                (swap SORTED_LIST j (+ j 1)) 
+  (let* ((largest i)                   ; begin assuming the root is largest
+         (left (+ (* 2 i) 1))          ; left child's position
+         (right (+ (* 2 i) 2)))        ; right child's position
+    
+    ;; check left child, if exists and is larger
+    (when (and (< left n)
+               (> (nth left list) (nth largest list)))
+      (setf largest left))
+    
+    ;; check right child, if exists and is larger
+    (when (and (< right n)
+               (> (nth right list) (nth largest list)))
+      (setf largest right))
+    
+    ;; if we found a child larger than the root
+    (when (not (= largest i))
+      ;; swap with the largest child
+      (swap list i largest)
+      ;; and we go again
+      (heapify list n largest)))
+  list)
 
-                ;; decrement j
-                (setf j (- j 1))
-
-             finally
-                 ;; move key to new spot
-                 (setf (nth (+ j 1) SORTED_LIST) key)
-           )
-         )
-
-    )
-
-  )
-
+;; actual heapsort 
+(defun HeapSort (INPUT_LIST)
+  (let ((n (length INPUT_LIST)) (RETURN_LIST (copy-list INPUT_LIST)) ) 
+    ;; build our initial max heap
+    (loop for i from (floor (/ n 2) 1) downto 0 do
+          (heapify RETURN_LIST n i))
+    
+    ;; extract elements one by one from the heap
+    (loop for i from (1- n) downto 1 do
+          (progn
+            ;; move current root (maximum) to the end
+            (swap RETURN_LIST 0 i)
+            ;; re-heapify
+            (heapify RETURN_LIST i 0)))
+    RETURN_LIST)
 )
 
 
 ;; our main method
 (defun main () 
-    
+
     ;; print several newline to get a clear output
     (format t "~%~%~%~%~a~%~%~%~%" " ")   
 
     ;; list of one item
 
       (setq TEST_LIST (GenRandoListOfCertainLength 1))
-      (setq SORTED_LIST (InsertionSort TEST_LIST))
+      (setq SORTED_LIST (HeapSort TEST_LIST))
 
       ;; double space
       (format t "~%~%~a" " ")   
@@ -121,7 +111,7 @@
     ;; list of 10 sorted numbers
 
       (setq TEST_LIST `(10 20 30 40 50 60 70 80 90 100))
-      (setq SORTED_LIST (InsertionSort TEST_LIST))
+      (setq SORTED_LIST (HeapSort TEST_LIST))
 
       ;; double space
       (format t "~%~%~a" " ")   
@@ -139,7 +129,7 @@
 
 
       (setq TEST_LIST `(100 90 80 70 60 50 40 30 20 10))
-      (setq SORTED_LIST (InsertionSort TEST_LIST))
+      (setq SORTED_LIST (HeapSort TEST_LIST))
 
       ;; double space
       (format t "~%~%~a" " ")   
@@ -158,7 +148,7 @@
 
 
       (setq TEST_LIST (GenRandoListOfCertainLength 13))
-      (setq SORTED_LIST (InsertionSort TEST_LIST))
+      (setq SORTED_LIST (HeapSort TEST_LIST))
 
       ;; double space
       (format t "~%~%~a" " ")   
@@ -171,6 +161,8 @@
       (print-ln SORTED_LIST)
 
 
+    
+    
     
 
 
