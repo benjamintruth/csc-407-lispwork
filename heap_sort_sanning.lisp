@@ -43,10 +43,7 @@
 
 ;;; the hated heapify function
 (defun heapify (list n i)
-
-  ;; this little manuver cost me 51 years ( took me forever to realize I needed sequential binding on the let* )
-
-  (let* ((largest i)                   ; begin assuming the root is largest
+  (let ((largest i)                   ; begin assuming the root is largest
          (left (+ (* 2 i) 1))          ; left child's position
          (right (+ (* 2 i) 2)))        ; right child's position
     
@@ -135,7 +132,7 @@
       (format t "~%~%~a" " ")   
 
       ;; print lists
-      (print-ln "LIST OF 10 SORTED: ")
+      (print-ln "LIST OF 10 SORTED DESCENDING: ")
       (print-ln "ORIGINAL LIST: ")
       (print-ln TEST_LIST)
       (print-ln "SORTED LIST: ")
@@ -177,7 +174,7 @@
  )
  
 
-;; call main
-(main)
+;; call main - disabled until needed
+;;(main)
 
 

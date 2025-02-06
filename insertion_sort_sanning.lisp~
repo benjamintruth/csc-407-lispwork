@@ -145,7 +145,7 @@
       (format t "~%~%~a" " ")   
 
       ;; print lists
-      (print-ln "LIST OF 10 SORTED DESCENDING: ")
+      (print-ln "LIST OF 10 SORTED: ")
       (print-ln "ORIGINAL LIST: ")
       (print-ln TEST_LIST)
       (print-ln "SORTED LIST: ")
